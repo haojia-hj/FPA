@@ -1,0 +1,5 @@
+{
+    "user_prefix": "<|start_header_id|>user<|end_header_id|>\n\n",
+    "assistant_prefix": "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "query_prompt": "Based on your knowledge and the provided information, answer the question:\n{question}"
+}
