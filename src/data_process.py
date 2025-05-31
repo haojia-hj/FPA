@@ -12,17 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import copy
-import json
 from tqdm import tqdm
-from functools import partial
-from typing import Dict, Sequence, Union
 
 import torch
-import numpy as np
 import transformers
-import common_utils
 
 
 def normalize_question(question):
@@ -78,6 +72,9 @@ def format_prompt(
     target_prefix = ""
 
     doc_prompt = build_contexts(example, n_docs=n_docs)
+
+    if dataset_name == "ASQA":
+        doc_prompt = "Answer the given question and cite the index of all references used in your answer. Ensure both the answer and citations are accurate.\n\n" + doc_prompt
 
     prefix = prompt_dict['user_prefix']
 

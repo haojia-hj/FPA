@@ -104,7 +104,6 @@ def infer(args):
 
     eval_result = save_outputs(output_text_list, test_data, args)
     print(eval_result)
-    # get_metrics(eval_result, args.output_dir, is_asqa=args.dataset_name == 'ASQA')
 
 
 def save_outputs(outputs, test_data, args):
