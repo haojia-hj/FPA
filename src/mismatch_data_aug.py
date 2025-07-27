@@ -38,12 +38,12 @@ def mismatch_aug(data):
 
 
 if __name__ == '__main__':
-    data_path = "../dataset/NaturalQuestions/dpo_train_nq_4096.json"
+    data_path = "dataset/NaturalQuestions/dpo_train_nq_4096.json"
     data = utils.jload(data_path)
     data_list = mismatch_aug(data)
     data_list = list(set(data_list))
     total_data = data + data_list
     random.seed(42)
     random.shuffle(total_data)
-    output_file = "../dataset/NaturalQuestions/dpo_train_nq_4096_mismatch.json"
+    output_file = "dataset/NaturalQuestions/dpo_train_nq_4096_mismatch.json"
     utils.jdump(total_data, output_file)

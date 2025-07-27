@@ -55,10 +55,60 @@ Run the following script to employ citation mismatch data augmentation strategy.
 python src/mismatch_data_aug.py
 ```
 
-## Training
+## Training & Inference
 
+Our fine-tuning and inference are implemented on the basis of [Llama Factory](https://github.com/hiyouga/LLaMA-Factory).
+If you want to use this framework, you can first complete the installation of Llama Factory and the preparation of the 
+dataset. Specifically, please copy the training dataset constructed in the previous step to the `LLaMA-Factory/data` 
+directory, and add the custom dataset in `LLaMA-Factory/data/dataset_info.json`, for example
 
-## Inference
+```
+"dpo_train_nq_4096_mismatch": {
+    "file_name": "dpo_train_nq_4096_mismatch.json",
+    "ranking": true,
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "chosen": "chosen",
+      "rejected": "rejected"
+    }
+}
+```
 
+See [config/train_model.json](https://github.com/haojia-hj/FPA/blob/main/config/train_model.json) for our fine-tuning settings.
+You can copy the `train_model.json` file to the `Llama-Factory/` directory and use the following command to run LoRA fine-tuning.
+
+```
+llamafactory-cli train train_model.json
+```
+
+If you want to implement inference using Llama Factory, you can first run the following command to convert the dataset 
+into the appropriate format.
+
+```
+python src/format_test_data.py
+```
+
+Please copy the formatted dataset to the `LLaMA-Factory/data` directory and update `LLaMA-Factory/data/dataset_info.json`, for example
+
+```
+"test_nq_rag_adaptive": {
+    "file_name": "test_nq_rag_adaptive.json",
+    "columns": {
+      "prompt": "instruction",
+      "response": "output"
+    }
+}
+```
+
+Then you can use the config file [config/infer.json](https://github.com/haojia-hj/FPA/blob/main/config/infer.json) to run inference.
+
+Alternatively, you can use `src/inference.py` to run inference by using the following script without data formatting.
+
+```
+bash infer.sh
+```
+
+But please first run the merging of the LoRA fine-tuning model using Llama Factory.
 
 ## Evaluation

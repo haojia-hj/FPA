@@ -1,0 +1,17 @@
+{
+  "stage": "sft",
+  "do_predict": true,
+  "predict_with_generate": true,
+  "model_name_or_path": "meta-llama/Meta-Llama-3-8B-Instruct",
+  "adapter_name_or_path": "llama3_lora_nli_mismatch",
+  "eval_dataset": "test_nq_rag_adaptive",
+  "per_device_eval_batch_size": 1,
+  "template": "llama3",
+  "finetuning_type": "lora",
+  "output_dir": "results_nli_mismatch_rag_adaptive",
+  "max_new_tokens": 4096,
+  "cutoff_len": 4096,
+  "do_sample": false,
+  "temperature": null,
+  "top_p": null
+}

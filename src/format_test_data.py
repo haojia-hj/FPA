@@ -49,12 +49,12 @@ def format_test_dataset(dataset_name, data, n_docs, adaptive_retrieval):
         }
         data_list.append(test_data)
 
-    output_file = f"../dataset/{dataset_name}/test_{task_type}.json"
+    output_file = f"dataset/{dataset_name}/test_{task_type}.json"
     utils.jdump(data_list, output_file)
 
 
 if __name__ == '__main__':
     dataset_name = "PopQA"
-    data_path = f"../dataset/{dataset_name}/test.json"
+    data_path = f"dataset/{dataset_name}/test.json"
     data = utils.jload(data_path)
     format_test_dataset(dataset_name, data, n_docs=5, adaptive_retrieval=True)

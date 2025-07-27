@@ -41,7 +41,6 @@ def data_filter(data, output_file):
         has_neg = False
         usable_list = []
         for idx, ctx in enumerate(ctxs):
-            del sample["ctxs"][idx]["llm_label"]
             del sample["ctxs"][idx]["nli_probs"]
             if ctx["entailment"] == 1:
                 sample["ctxs"][idx]["usable"] = True
@@ -65,12 +64,12 @@ if __name__ == '__main__':
     nli_model.to(device)
     nli_model.eval()
 
-    statement_path = '../dataset/NaturalQuestions/train_statement.json'
+    statement_path = 'dataset/NaturalQuestions/train_statement.json'
     data_statement = utils.jload(statement_path)
 
-    retrieval_path = '../dataset/NaturalQuestions/train.json'
+    retrieval_path = 'dataset/NaturalQuestions/train.json'
     data_retrieval = utils.jload(retrieval_path)[:len(data_statement)]
 
     labeled_data = nli_annotate(tokenizer, nli_model, device, data_retrieval, data_statement)
-    output_file = "../dataset/NaturalQuestions/train_nli_label.json"
+    output_file = "dataset/NaturalQuestions/train_nli_label.json"
     data_filter(labeled_data, output_file)
