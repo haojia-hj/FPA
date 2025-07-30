@@ -1,5 +1,4 @@
 import re, json, string
-from tqdm import tqdm
 import numpy as np
 
 
@@ -58,50 +57,23 @@ def compute_str_em(data):
     return 100 * np.mean(acc), 100 * np.mean(hit)
 
 
-def get_metrics(data, save_dir=None, is_asqa=False):
+def get_metrics(data, save_dir=None):
     idx = 0
-    num_accurate = 0
-    print('Evaluating results...')
-    if is_asqa:
-        rationale_str_em, _ = compute_str_em(data)
-    else:
-        for d in tqdm(data):
-            idx += 1
-            is_accurate = exact_presence(d['answers'], d['rationale'])
-            num_accurate += 1 if is_accurate else 0
+    str_em, _ = compute_str_em(data)
 
-    if is_asqa:
-        print(f"Rationale EM: {rationale_str_em:.1f}%")
-        eval_result = {"EM": rationale_str_em, "num_examples": idx}
-    else:
-        accuracy = num_accurate / idx * 100
-        print(f"Accuracy: {accuracy:.1f}%")
-        eval_result = {"accuracy": accuracy, "num_examples": idx}
-    
+    print(f"str-em: {str_em:.1f}%")
+    eval_result = {"str-em": str_em, "num_examples": idx}
+
     with open(f"{save_dir}/metrics_direct.json", "w") as f:
         f.write(json.dumps(eval_result) + "\n")   
 
     return eval_result
 
 
-def get_asqa_metrics(data, is_asqa=False):
+def get_asqa_metrics(data):
     idx = 0
-    num_accurate = 0
-    print('Evaluating results...')
-    if is_asqa:
-        rationale_str_em, _ = compute_str_em(data)
-    else:
-        for d in tqdm(data):
-            idx += 1
-            is_accurate = exact_presence(d['answers'], d['rationale'])
-            num_accurate += 1 if is_accurate else 0
-
-    if is_asqa:
-        print(f"Rationale EM: {rationale_str_em:.2f}%")
-        eval_result = {"EM": rationale_str_em, "num_examples": idx}
-    else:
-        accuracy = num_accurate / idx * 100
-        print(f"Accuracy: {accuracy:.1f}%")
-        eval_result = {"accuracy": accuracy, "num_examples": idx}
+    str_em, _ = compute_str_em(data)
+    print(f"str-em: {str_em:.2f}%")
+    eval_result = {"str-em": str_em, "num_examples": idx}
 
     return eval_result

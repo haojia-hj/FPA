@@ -112,3 +112,12 @@ bash infer.sh
 But please first run the merging of the LoRA fine-tuning model using Llama Factory.
 
 ## Evaluation
+
+For NQ, PopQA and TriviaQA, we evaluate the accuracy based on whether the output contains ground truth answers.
+For ASQA, we use the official metrics in ALCE, including correctness (str-em), citation precision (pre) and recall (rec).
+You can run the following script to calculate accuracy and correctness (str-em). The implementation of the calculation for citation 
+precision and recall refers to [ALCE](https://github.com/princeton-nlp/ALCE?tab=readme-ov-file#evaluation).
+
+```
+python src/eval.py
+```
