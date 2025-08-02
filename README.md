@@ -2,6 +2,16 @@
 
 This is the official implementation for paper _All That Glitters is Not Gold: Improving Robust Retrieval-Augmented Language Models with Fact-Centric Preference Alignment_.
 
+## Content
+
+- [Installation](#installation)
+- [Retrieve](#retrieve)
+  - [Download data](#download-data)
+  - [Retrieve with your own data](#retrieve-with-your-own-data)
+- [Construct Training Dataset](#construct-training-dataset)
+- [Training & Inference](#training--inference)
+- [Evaluation](#evaluation)
+
 ## Installation
 
 To install dependent Python libraries, run
@@ -16,9 +26,64 @@ pip install -r requirements.txt
 
 ### Download data
 
+You can download all QA datasets with retrieved results used in our work from this [link](https://drive.google.com/file/d/18IP07_r-59JV6Nn5LlycIxEPSq4Nismm/view?usp=share_link)
+or by running this command:
+
+```
+gdown https://drive.google.com/uc?id=18IP07_r-59JV6Nn5LlycIxEPSq4Nismm
+```
 
 ### Retrieve with your own data
 
+In our work, we use different retrievers (including DPR, Contriever MSMARCO, and GTR) to retrieve documents.
+
+For [DPR](https://github.com/facebookresearch/DPR), you can first install the DPR repo, then download Wikipedia passages,
+passage embeddings and a biencoder checkpoint.
+
+```
+python dpr/data/download_data.py --resource data.wikipedia_split.psgs_w100
+python dpr/data/download_data.py --resource data.retriever_results.nq.single.wikipedia_passages
+python dpr/data/download_data.py --resource checkpoint.retriever.single.nq.bert-base-encoder
+```
+
+You can run the script below to get the retrieval results.
+
+```
+python dense_retriever.py \
+	model_file={path to a checkpoint file} \
+	qa_dataset=nq_test \
+	ctx_datatsets=[dpr_wiki] \
+	encoded_ctx_files=["~/myproject/downloads/data/retriever_results/nq/single/wikipedia_passages_*"] \
+	out_file={path to output json file with results} 
+```
+
+Alternatively, you can directly download the top-100 DPR retrieval results for NQ from these links:
+ [nq-train](https://dl.fbaipublicfiles.com/dpr/data/retriever_results/single/nq-train.json.gz),
+ [nq-dev](https://dl.fbaipublicfiles.com/dpr/data/retriever_results/single/nq-dev.json.gz) and
+ [nq-test](https://dl.fbaipublicfiles.com/dpr/data/retriever_results/single/nq-test.json.gz), refer to
+ [here](https://github.com/facebookresearch/DPR/blob/main/dpr/data/download_data.py).
+
+For [Contriever-MSMARCO](https://github.com/facebookresearch/contriever), you can first complete setup, then download
+Wikipedia passages and passage embeddings pre-computed with Contriever-MSMARCO.
+```
+wget https://dl.fbaipublicfiles.com/dpr/wikipedia_split/psgs_w100.tsv.gz
+wget https://dl.fbaipublicfiles.com/contriever/embeddings/contriever-msmarco/wikipedia_embeddings.tar
+```
+You can run the following command to retrieve top-5 passages.
+```
+python passage_retrieval.py 
+    --model_name_or_path facebook/contriever-msmarco \
+    --passages psgs_w100.tsv \
+    --passages_embeddings "wikipedia_embeddings/*" \
+    --data path/to/YOUR_INPUT_DATA.json \
+    --output_dir path/to/YOUR_OUTPUT_DIR \
+    --n_docs 5 \
+    --no_fp16
+```
+
+For GTR, please refer to this [repo](https://github.com/google-research/t5x_retrieval). We use the top-100 GTR retrieval
+results for ASQA provided by ALCE. You can install the [ALCE repo](https://github.com/princeton-nlp/ALCE?tab=readme-ov-file#data)
+and directly download the data.
 
 ## Construct Training Dataset
 
